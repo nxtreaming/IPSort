@@ -71,21 +71,24 @@ func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 
 	writer := bufio.NewWriter(file)
 	for _, ip := range ips {
-		cmd := "response=$(curl -m 3 -x http://$user:$pass@" + ip.String() + ":$port $URL --silent --write-out \"%{http_code}\" --output /dev/null)\n"
-		cmd += "if [ \"$response\" -eq \"000\" ]; then\n"
-		cmd += "	if [ $error_occurred -eq 0 ]; then\n"
-		cmd += "		echo \"\"\n"
-		cmd += "		error_occurred=1\n"
-		cmd += "	fi\n"
-		cmd += "	echo \"Error:" + ip.String() + "\"\n"
-		cmd += "else\n"
-		cmd += "	echo -n \"*\"\n"
-		cmd += "	error_occurred=0\n"
-		cmd += "fi\n"
-		cmd += "sleep 0.01\n"
+		var cmd string
+
 		if flags == 1 {
-			//we only use the sorted IPs
+			// we only use the sorted IPs
 			cmd = ip.String()
+		} else {
+			cmd = "response=$(curl -m 3 -x http://$user:$pass@" + ip.String() + ":$port $URL --silent --write-out \"%{http_code}\" --output /dev/null)\n"
+			cmd += "if [ \"$response\" -eq \"000\" ]; then\n"
+			cmd += "	if [ $error_occurred -eq 0 ]; then\n"
+			cmd += "		echo \"\"\n"
+			cmd += "		error_occurred=1\n"
+			cmd += "	fi\n"
+			cmd += "	echo \"Error:" + ip.String() + "\"\n"
+			cmd += "else\n"
+			cmd += "	echo -n \"*\"\n"
+			cmd += "	error_occurred=0\n"
+			cmd += "fi\n"
+			cmd += "sleep 0.01\n"
 		}
 		_, err := fmt.Fprintln(writer, cmd)
 		if err != nil {
