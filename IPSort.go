@@ -34,7 +34,7 @@ func sortIPsFromFile(filePath string) ([]net.IP, error) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			fmt.Println("Unable to open the file", err)
+			fmt.Println("Unable to open the file:", err)
 		}
 	}(file)
 
@@ -65,7 +65,7 @@ func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			fmt.Println("Failed to close file", err)
+			fmt.Println("Failed to close file:", err)
 		}
 	}(file)
 
