@@ -77,7 +77,8 @@ func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 			// we only use the sorted IPs
 			cmd = ip.String()
 		} else {
-			cmd = "response=$(curl -m 3 -x http://$user:$pass@" + ip.String() + ":$port $URL --silent --write-out \"%{http_code}\" --output /dev/null)\n"
+			cmd = "response=$(curl -m 3 -x http://$user:$pass@" + ip.String() + ":$port $URL --silent " +
+				"--write-out \"%{http_code}\" --output /dev/null)\n"
 			cmd += "if [ \"$response\" -eq \"000\" ]; then\n"
 			cmd += "	if [ $error_occurred -eq 0 ]; then\n"
 			cmd += "		echo \"\"\n"
