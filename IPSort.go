@@ -57,6 +57,22 @@ func sortIPsFromFile(filePath string) ([]net.IP, error) {
 	return ips, nil
 }
 
+func hasIPDuplicate(slice []net.IP) (bool, net.IP) {
+	elementMap := make(map[int]bool)
+
+	for _, element := range slice {
+		if element.To4() == nil {
+			continue
+		}
+		var ipInt int = int(element[0])<<24 + int(element[1])<<16 + int(element[2])<<8 + int(element[3])
+		if _, exists := elementMap[ipInt]; exists {
+			return true, element
+		}
+		elementMap[ipInt] = true
+	}
+	return false, nil
+}
+
 func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 	file, err := os.Create(filePath)
 	if err != nil {
@@ -121,6 +137,12 @@ func main() {
 	ips, err := sortIPsFromFile(*inputFile)
 	if err != nil {
 		fmt.Println("Error:", err)
+		return
+	}
+
+	isDuplicate, ip := hasIPDuplicate(ips)
+	if isDuplicate {
+		fmt.Printf("Error: IP(%s) address is duplicated\n", ip.String())
 		return
 	}
 
