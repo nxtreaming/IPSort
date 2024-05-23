@@ -64,7 +64,8 @@ func hasIPDuplicated(slice []net.IP) (bool, net.IP) {
 		if element.To4() == nil {
 			continue
 		}
-		var ipInt int = int(element[0])<<24 + int(element[1])<<16 + int(element[2])<<8 + int(element[3])
+		ip := element.To4()
+		var ipInt int = int(ip[0])<<24 + int(ip[1])<<16 + int(ip[2])<<8 + int(ip[3])
 		if _, exists := elementMap[ipInt]; exists {
 			return true, element
 		}
