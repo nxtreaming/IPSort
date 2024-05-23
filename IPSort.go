@@ -91,6 +91,7 @@ func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 			cmd += "fi\n"
 			cmd += "sleep 0.01\n"
 		}
+		fmt.Println(ip.String())
 		_, err := fmt.Fprintln(writer, cmd)
 		if err != nil {
 			break
