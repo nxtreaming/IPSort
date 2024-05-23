@@ -58,7 +58,7 @@ func sortIPsFromFile(filePath string) ([]net.IP, error) {
 }
 
 func hasIPDuplicated(slice []net.IP) (bool, net.IP) {
-	elementMap := make(map[int]bool)
+	elementMap := make(map[int]struct{})
 
 	for _, element := range slice {
 		if element.To4() == nil {
@@ -68,7 +68,7 @@ func hasIPDuplicated(slice []net.IP) (bool, net.IP) {
 		if _, exists := elementMap[ipInt]; exists {
 			return true, element
 		}
-		elementMap[ipInt] = true
+		elementMap[ipInt] = struct{}{}
 	}
 	return false, nil
 }
