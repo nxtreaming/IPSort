@@ -57,7 +57,7 @@ func sortIPsFromFile(filePath string) ([]net.IP, error) {
 	return ips, nil
 }
 
-func removeIPsFromFile(filePath string, removeIPs []net.IP) ([]net.IP, error) {
+func removeIPsFromSet(filePath string, removeIPs []net.IP) ([]net.IP, error) {
 	ips, err := sortIPsFromFile(filePath)
 	if err != nil {
 		return nil, err
@@ -163,7 +163,7 @@ func main() {
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
-		ips, err = removeIPsFromFile(*inputFile, removeIPs)
+		ips, err = removeIPsFromSet(*inputFile, removeIPs)
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
