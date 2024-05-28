@@ -57,6 +57,27 @@ func sortIPsFromFile(filePath string) ([]net.IP, error) {
 	return ips, nil
 }
 
+func removeIPsFromFile(filePath string, removeIPs []net.IP) ([]net.IP, error) {
+	ips, err := sortIPsFromFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	removeMap := make(map[string]struct{})
+	for _, ip := range removeIPs {
+		removeMap[ip.String()] = struct{}{}
+	}
+
+	var result []net.IP
+	for _, ip := range ips {
+		if _, found := removeMap[ip.String()]; !found {
+			result = append(result, ip)
+		}
+	}
+
+	return result, nil
+}
+
 func hasIPDuplicated(slice []net.IP) (bool, net.IP) {
 	elementMap := make(map[int]struct{})
 
@@ -120,6 +141,7 @@ func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 func main() {
 	inputFile := flag.String("i", "", "Input file")
 	fmtFlagStr := flag.String("f", "", "Format flag (0/1)")
+	removeFile := flag.String("r", "", "Remove file")
 	outputFile := flag.String("o", "", "Output file")
 
 	flag.Parse()
@@ -135,10 +157,22 @@ func main() {
 		return
 	}
 
-	ips, err := sortIPsFromFile(*inputFile)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
+	var ips []net.IP
+	if *removeFile != "" {
+		removeIPs, err := sortIPsFromFile(*removeFile)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+		ips, err = removeIPsFromFile(*inputFile, removeIPs)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+	} else {
+		ips, err = sortIPsFromFile(*inputFile)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
 	}
 
 	isDuplicated, ip := hasIPDuplicated(ips)
