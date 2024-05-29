@@ -139,10 +139,10 @@ func writeIPsToFile(ips []net.IP, flags int, filePath string) error {
 }
 
 func main() {
-	inputFile := flag.String("i", "", "Input file")
+	inputFile := flag.String("i", "", "Input IPs file")
 	fmtFlagStr := flag.String("f", "", "Format flag (0/1)")
-	removeFile := flag.String("r", "", "Remove file")
-	outputFile := flag.String("o", "", "Output file")
+	removeFile := flag.String("r", "", "Remove IPs file")
+	outputFile := flag.String("o", "", "Output IPs file")
 
 	flag.Parse()
 
